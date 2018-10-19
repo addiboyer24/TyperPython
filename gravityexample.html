@@ -1,0 +1,32 @@
+<html>
+    
+    <head>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    </head>
+    
+    <body>
+        <h1 style="background-color:black; color:gold; width:600px">Gravity in HTML5</h1>
+        
+        
+        <canvas id="canvas" width="600px" height="500px" style="background-color:blue; border-style:solid; border-color:black;"></canvas>
+        
+        <iframe style="float:right;" width="219" height="302" src="https://calculator-1.com/outdoor/?f=42aaff&r=666666" scrolling="no" frameborder="0"></iframe><br /><a style="font-size:6pt; float:right;" id="hide" href="https://calculator-1.com/">Calculator-1.com - The Best Free Online Calculatorн</a>
+        
+        <br><br>
+       
+        <center></center><label for="grav">Enter gravity value: </label><input id="grav" type="text">
+    <br><br><button onclick="init()" id="start">Throw ball</button><button onclick="refresh()"id="reset">Reset</button><br><br><label for="speed">Enter speed value: </label><input type="text" id="speed"></center>
+
+    
+    
+    </body>
+    
+<script src="gravityandcollision.js"></script>
+<script>
+    function refresh(){
+        window.location.replace("./gravityexample.html");
+    }
+</script>
+
+</html>
