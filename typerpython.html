@@ -5,6 +5,9 @@
 <script src="http://www.skulpt.org/static/skulpt-stdlib.js" type="text/javascript"></script>
 <script src="https://d3js.org/d3.v5.min.js"></script>
 
+    <style>
+
+    </style>
 
 </head> 
 
@@ -28,7 +31,7 @@ function builtinRead(x) {
 // configure the output function
 // call Sk.importMainWithBody()
 function runit() { 
-   var prog = document.getElementById("yourcode").value; 
+   var prog = document.getElementById("yourcode").value;
    var mypre = document.getElementById("output"); 
    mypre.innerHTML = ''; 
    Sk.pre = "output";
@@ -51,7 +54,7 @@ function runit() {
 <center>
 <h3 style="font-size:20pt;">Typer Python</h3> 
 <form>
-    <canvas id="gameback" style="border-style:solid; border-color:black; float:center; height:660px; width:810px;">
+    <canvas id="gameback" style="background-color:darkgray; border-width:1px; border-style:solid; border-color:black; float:center; height:600px; width:700px;">
     </canvas>
 <textarea wrap="soft" style="float:center; width:400px; font-family:sans-serif; font-size:12pt; color:darkslategray; background-color:white;" id="yourcode" cols="40" rows="10">
 print("Welcome to TyperPython")
@@ -65,7 +68,7 @@ print("Welcome to TyperPython")
     </left>                                                       
 </body> 
                   
-<script src="typerhelper.js"></script>
+<script src="./typerdraw.js"></script>
     
 <script>
                   
