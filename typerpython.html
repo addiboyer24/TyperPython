@@ -32,6 +32,9 @@ function builtinRead(x) {
 // call Sk.importMainWithBody()
 function runit() { 
    var prog = document.getElementById("yourcode").value;
+    if(prog == "print()\n"){
+        playGame();
+    }
    var mypre = document.getElementById("output"); 
    mypre.innerHTML = ''; 
    Sk.pre = "output";
@@ -52,14 +55,15 @@ function runit() {
 </script>
 
 <center>
-<h3 style="font-size:20pt;">Typer Python</h3> 
+<h3 style="font-size:20pt;">Typer Python (Game 1 - Tetris)</h3> 
+    <h2>Press RUN to play!</h2>
 <form>
-    <canvas id="gameback" style="background-color:darkgray; border-width:1px; border-style:solid; border-color:black; float:center; height:600px; width:700px;">
+    <canvas id="gameback" style="background-color:lightgray; float:center; height:600px; width:600px;">
     </canvas>
 <textarea wrap="soft" style="float:center; width:400px; font-family:sans-serif; font-size:12pt; color:darkslategray; background-color:white;" id="yourcode" cols="40" rows="10">
-print("Welcome to TyperPython")
+print()
 </textarea><br />
-<button style="color:white; background-color:green;"    type="button" onclick="runit()">>></button> 
+<button id="run" style="color:white; background-color:green;"    type="button" onclick="runit()">RUN</button> 
 </form> 
      </center>
     <left>
