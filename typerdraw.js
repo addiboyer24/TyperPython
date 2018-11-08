@@ -102,9 +102,9 @@ function draw(){
 }
 
 function spawnBlock(){
-    dropX = Math.round(Math.random(10)*canvas.width-10);
+    dropX = Math.round(Math.random()*(canvas.width-canvas.width/7));
     // x[0], y[1], color[2], width[3], height[4]
- blocks.push([dropX,-20,colors[Math.round(Math.random()*3)],canvas.width/7,canvas.height/40]);
+ blocks.push([dropX,-20,colors[Math.round(Math.random()*3)],canvas.width/7,canvas.height/30]);
     blockIndex+=1;
     return;
 }
