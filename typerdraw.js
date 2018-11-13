@@ -3,9 +3,12 @@ Author: Addison Boyer
 Created: 11/02/2018
 Shell for tetris style game for TyperPython
 */
+var hammer = new Image(20,20);
+hammer.src = "./hammer.png";
+var ding = new Audio("./ding.mp3");
 var crumbling = new Audio("./crumbling.mp3")
 var correct = new Audio("./correct.mp3");
-var difficulty = 2, score = 0, bustIts = 3; 
+var difficulty = 1, score = 0, bustIts = 3; 
 var canvas = document.getElementById("gameback");
 ctx = canvas.getContext("2d");
 canvas.height = 500;
@@ -110,6 +113,11 @@ function draw(){
         ctx.fillStyle = "black";
         ctx.font = "10px Comic Sans MS";
         ctx.fillText(b[5].question, b[0]+2,b[1]+b[4]/2);
+        
+        for(var i = 0; i < bustIts; i++){
+            ctx.drawImage(hammer,(i+1)*40,10);
+        }
+        
     });
 }
 
@@ -117,7 +125,7 @@ function spawnBlock(){
     dropX = Math.round(Math.random()*(canvas.width-canvas.width/7));
 console.log(dropX);
     // x[0], y[1], color[2], width[3], height[4] question[5] isActive[6]
- blocks.push([dropX,-20,colors[Math.round(Math.random()*3)],canvas.width/7,canvas.height/7,createQuestion(),true]);
+ blocks.push([dropX,-canvas.height/7,colors[Math.round(Math.random()*3)],canvas.width/7,canvas.height/7,createQuestion(),true]);
     blockIndex+=1;
     return;
 }
@@ -133,6 +141,8 @@ function checkForAnswer(answer){
             score+=difficulty; // Score porportional to difficulty
             if(score % 5 == 0){
                 difficulty+=1;
+                bustIts+=1;
+                ding.play();
             }
             document.getElementById("yourcode").value = "";
             spawnBlock();
@@ -145,7 +155,7 @@ function createQuestion(){
     var start = Math.round(Math.random()*10);
     var stop = Math.round((Math.random()*20)+11);
     
-    if(difficulty == 1){
+    if(difficulty == 2){
         var questionString = start + " to " + stop + " (Sum)"; 
         var answerString = "";
         total = 0;
@@ -155,7 +165,7 @@ function createQuestion(){
         answerString+=total
         answerString+="\n";
     }
-    else if(difficulty == 2){
+    else if(difficulty == 3){
         var divisibleBy = Math.round(Math.random(1)*10);
         var questionString = start + " to " + stop + " %" + divisibleBy + "=0"; 
     var answerString = "";
