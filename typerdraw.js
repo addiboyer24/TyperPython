@@ -3,12 +3,28 @@ Author: Addison Boyer
 Created: 11/02/2018
 Shell for tetris style game for TyperPython
 */
-var hammer = new Image(20,20);
+
+var pythonConsole = document.getElementById("yourcode");
+pythonConsole.onkeyup = reservedWords;
+var defaultSpeed = .3;
+var chameleon = new Image();
+chameleon.src = "./chameleon.png";
+var bomb = new Image();
+bomb.src = "./bomb.png";
+var eraser = new Image();
+eraser.src = "./eraser.png";
+var turtle = new Image();
+turtle.src = "./turtle.png";
+var hammer = new Image();
 hammer.src = "./hammer.png";
+
+var erasing = new Audio("./eraser.mp3");
+var change = new Audio("./change.wav");
+var braking = new Audio("./braking.wav");
 var ding = new Audio("./ding.mp3");
 var crumbling = new Audio("./crumbling.mp3")
 var correct = new Audio("./correct.mp3");
-var difficulty = 1, score = 0, bustIts = 3; 
+var difficulty = 1, score = 0, bustIts = 3, turtlePowerAvailable = true, bombPowerAvailable = true, chameleonPowerAvailable = true, eraserPowerAvailable = true; 
 var canvas = document.getElementById("gameback");
 ctx = canvas.getContext("2d");
 canvas.height = 500;
@@ -89,7 +105,7 @@ function update(e){
             }
         }
         
-        blocks[blockIndex][1]+=.2;
+        blocks[blockIndex][1]+=blocks[blockIndex][7];
     }
     else{
         blocks[blockIndex][6] = false;
@@ -114,18 +130,35 @@ function draw(){
         ctx.font = "10px Comic Sans MS";
         ctx.fillText(b[5].question, b[0]+2,b[1]+b[4]/2);
         
+        
+        ctx.fillStyle="darkgray";
+        ctx.fillRect(0,0,canvas.width,50);
+        
         for(var i = 0; i < bustIts; i++){
-            ctx.drawImage(hammer,(i+1)*40,10);
+            ctx.drawImage(hammer,(i)*40 + 10,10);
+            
         }
         
+        if(turtlePowerAvailable){
+            ctx.drawImage(turtle, canvas.width-turtle.width-10,10);
+        }
+        
+        if(eraserPowerAvailable){
+            ctx.drawImage(eraser, canvas.width-turtle.width - 50, 10);
+        }
+        
+        if(chameleonPowerAvailable){
+            ctx.drawImage(chameleon, canvas.width-turtle.width-90,10);
+        }
+           
     });
 }
 
 function spawnBlock(){
     dropX = Math.round(Math.random()*(canvas.width-canvas.width/7));
-console.log(dropX);
-    // x[0], y[1], color[2], width[3], height[4] question[5] isActive[6]
- blocks.push([dropX,-canvas.height/7,colors[Math.round(Math.random()*3)],canvas.width/7,canvas.height/7,createQuestion(),true]);
+    // x[0], y[1], color[2], width[3], height[4] question[5] isActive[6] speed[7]
+
+ blocks.push([dropX,-canvas.height/7,colors[Math.round(Math.random()*3)],canvas.width/7,canvas.height/7,createQuestion(),true, defaultSpeed]);
     blockIndex+=1;
     return;
 }
@@ -140,6 +173,7 @@ function checkForAnswer(answer){
             correct.play();
             score+=difficulty; // Score porportional to difficulty
             if(score % 5 == 0){
+                //defaultSpeed+=.1;
                 difficulty+=1;
                 bustIts+=1;
                 ding.play();
@@ -190,8 +224,6 @@ function createQuestion(){
         
     }
     
-    
-
     var question = {"question": questionString, "answer": answerString};
     
     return question;
@@ -207,19 +239,75 @@ function killBlock(e){
     var y = (e.clientY - rect.top)*scaleY;
     
     if(collide([x,y,"Blue",30,30,true]) && bustIts > 0){
-        blocks.splice(blocks.indexOf(blocks[blockIndex]));
+        blocks.splice(blocks.indexOf(blocks[blockIndex]),1);
             crumbling.play()
             bustIts-=1;
             blockIndex-=1;
             spawnBlock();
     }
+    powerUpUsed(x,y);
+    
+}
+function eraseAllBlocks(){
+    blocks = [blocks[blockIndex]]
+    erasing.play();
+    blockIndex = 0;
+}
+function powerUpUsed(x,y){
+    
+    var turtleX = canvas.width-turtle.width-10;
+    var eraserX = canvas.width-bomb.width-50;
+    var chameleonX = canvas.width-chameleon.width-90;
+    var checkY = 10;
+    
+    // Block to check (x,y.10,10)
+    // falling (turtleX, checkY, turtle.width, turtle.height )
+    
+    // slow down with Turtle
+    if (x < turtleX + turtle.width &&
+   x + 10 > turtleX &&
+   y < checkY + turtle.height &&
+   y + 10 > checkY) {
+        
+        // Used the turtle powerup
+        turtlePowerAvailable = false;
+        braking.play();
+        blocks[blockIndex][7]-=.25;
+    
+}
+else if(x < eraserX + eraser.width &&
+   x + 10 > eraserX &&
+   y < checkY + eraser.height &&
+   y + 10 > checkY){
+    
+    eraserPowerAvailable = false;
+    eraseAllBlocks();
+}
+else if(x < chameleonX + chameleon.width &&
+   x + 10 > chameleonX &&
+   y < checkY + chameleon.height &&
+   y + 10 > checkY){
+    chameleonPowerAvailable = false;
+    change.play();
+    blocks[blockIndex][5] = createQuestion();
 }
 
+}
+function reservedWords(){
+    var text = pythonConsole.value;
+    var pos = text.search("for");
+    var coloredString = "";
+    if(pos != -1){
+        for(var i = 0; i < pos; i++){
+            coloredString+=text
+        }
+        
+        coloredString = coloredString + "<span style='font-size:30px';>" + "for" + "&nbsp;</span>";
+        coloredString+=text.substring(pos+3,text.length);
+        
+        pythonConsole.innerHTML = coloredString;
+        console.log(pythonConsole.innerHTML);
+    }
+}
 document.onmousedown = killBlock;
 setInterval(update, 10);
-
-
-
-
-
-
