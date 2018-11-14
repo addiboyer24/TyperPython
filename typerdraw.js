@@ -7,7 +7,7 @@ Shell for tetris style game for TyperPython
 var pythonConsole = document.getElementById("yourcode");
 pythonConsole.onkeyup = reservedWords;
 var isFloating = false;
-var defaultSpeed = .3;
+var defaultSpeed = .25;
 var float = new Image();
 float.src="./balloon.png";
 var move = new Image();
@@ -163,7 +163,7 @@ function draw(){
         ctx.strokeRect(b[0],b[1],b[3],b[4]);
         ctx.fillRect(b[0],b[1],b[3],b[4]);
         ctx.fillStyle = "Black";
-        ctx.font = "13px Comic Sans MS";
+        ctx.font = "11px Comic Sans MS";
         ctx.fillText(b[5].question, b[0]+2,b[1]+b[4]/2);
         
         
@@ -351,7 +351,7 @@ function powerUpUsed(x,y){
         // Used the turtle powerup
         turtlePowerAvailable = false;
         braking.play();
-        blocks[blockIndex][7]-=.25;
+        blocks[blockIndex][7]-=.235;
     
 }
 // Erase all blocks on the screen
@@ -377,9 +377,7 @@ else if(x < chameleonX + chameleon.width &&
    y < checkY + time.height &&
    y + 10 > checkY){
     
-    for(var i = 0; i < 30; i++){
-        blocks[blockIndex][1]-=7.5;
-    }
+    blocks[blockIndex][1] = 0;
     
     timePowerAvailable = false;
     winding.play();
