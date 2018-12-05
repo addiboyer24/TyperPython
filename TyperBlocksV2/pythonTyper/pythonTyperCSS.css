@@ -1,0 +1,79 @@
+html, body {
+    background-color:white;
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	border: 0;
+	overflow: hidden; /* Disable scrollbars */
+	/*display: block;  /* No floating content on sides */
+}
+pre{
+    position:absolute;
+    bottom:1px;
+    right:7px;
+    height:60%;
+    width:19%;
+    color:black;
+    font-family:Courier New;
+    font-size:18px;
+}
+div{
+    position: relative;
+    border: 0px;
+    padding:0; 
+    margin:0;
+    border-collapse: collapse;
+    height:25%;
+    width:19%;
+    background-color:lightgray;
+    font-family: Courier New;
+    font-size:18px;
+    resize:none;
+    color:black;
+}
+textarea{
+    position: absolute;
+    border: 0px;
+    padding:0; 
+    margin:0;
+    border-collapse: collapse;
+    height:25%;
+    width:19%;
+    background-color:lightgray;
+    font-family: Courier New;
+    font-size:18px;
+    resize:none;
+}
+button{
+    color:black;
+    position:absolute;
+    text-align:center;
+    font-size:18px;
+    top:26%;
+    right:10%;
+    font-family: Courier New;
+    
+  
+}
+canvas {
+    position: relative;
+    border: 0px;
+    padding:0; 
+    margin:0;
+    border-collapse: collapse;
+}
+
+#mainCanvas{
+	position: relative;
+    border: 0px;
+    padding:0; 
+    margin:0;
+    border-collapse: collapse;
+}
+
+#consoleCanvas{
+    float: right;
+}
+.statement {
+    color:orange;
+}

@@ -1,0 +1,107 @@
+<html> 
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js" type="text/javascript"></script> 
+<script src="http://www.skulpt.org/static/skulpt.min.js" type="text/javascript"></script>
+
+<script src="http://www.skulpt.org/static/skulpt-stdlib.js" type="text/javascript"></script>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<link rel="stylesheet" href="./pythonTyper/pythonTyperCSS.css">
+
+    <style> 
+        #words{
+            color:yellow;
+            background-color:blue;
+        }
+
+    </style>
+
+</head> 
+
+<body style="background-color:white;"> 
+
+<script type="text/javascript"> 
+// output functions are configurable.  This one just appends some text
+// to a pre element.
+function outf(text) { 
+    var mypre = document.getElementById("output");
+    mypre.innerHTML = mypre.innerHTML + text;
+} 
+function builtinRead(x) {
+    if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
+            throw "File not found: '" + x + "'";
+    return Sk.builtinFiles["files"][x];
+}
+// Here's everything you need to run a python program in skulpt
+// grab the code from your textarea
+// get a reference to your pre element for output
+// configure the output function
+// call Sk.importMainWithBody()
+function runit() { 
+   var prog = document.getElementById("consoleCanvas").value;
+    
+   var mypre = document.getElementById("output"); 
+   mypre.innerHTML = ''; 
+   Sk.pre = "output";
+    
+   Sk.configure({output:outf, read:builtinRead}); 
+   (Sk.TurtleGraphics || (Sk.TurtleGraphics = {})).target = 'mycanvas';
+   var myPromise = Sk.misceval.asyncToPromise(function() {
+       return Sk.importMainWithBody("<stdin>", false, prog, true);
+   });
+   myPromise.then(function(mod) {
+       console.log("success");
+       //checkForAnswer(mypre.innerHTML);
+   },
+       function(err) {
+       console.log(err.toString());
+   });
+}
+
+// document.body.style.cursor = "help"; // If we want to change cursor style
+</script>
+
+<center>
+    
+<form>
+ <canvas id='scoreCanvas'>
+    </canvas>
+    <!--<canvas id='consoleCanvas'>
+    </canvas>-->
+    <textarea id='consoleCanvas'>for x in range(0,1):
+        print(x)</textarea>
+	<canvas id='mainCanvas'>
+	</canvas>
+        <right><button id="run" style="color:white; background-color:green;"    type="button" onclick="runit()">RUN</button></right>
+</form>
+     </center>
+    <left>
+<!--<pre style="background-color:darkgray; color:white;" id="output"></pre> -->
+<!-- If you want turtle graphics include a canvas -->
+    </left>                                          
+</body> 
+    
+<script src="./pythonTyper/js/pythonGameScript.js"></script>
+    
+<script>
+                  
+    // Override tab key function
+                  
+    var textarea = document.getElementById("consoleCanvas");
+    textarea.addEventListener('keydown', function(e){
+        if(e.keyCode == 9){
+            const curText = textarea.value;
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const tab = "\t";
+            textarea.value = curText.slice(0,start) + tab + curText.slice(end);
+            textarea.selectionStart = textarea.selectionEnd = start + tab.length;
+            
+            e.preventDefault();
+        }
+    });
+    
+
+    </script>
+    
+</html>
