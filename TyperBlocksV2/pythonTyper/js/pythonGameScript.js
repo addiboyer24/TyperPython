@@ -17,6 +17,7 @@ var isTurtlePower = true, isEraserPower = true, isChameleonPower = true;
 /*
 Game images and audio
 */
+//Images
 var hammer = new Image();
 hammer.src = "./assets/hammer.png";
 var turtle = new Image();
@@ -25,6 +26,16 @@ var eraser = new Image();
 eraser.src = "./assets/eraser.png";
 var chameleon = new Image();
 chameleon.src = "./assets/eraser.png";
+
+//Audio
+var backgroundMusic = new Audio("./assets/gamemusic.mp3");
+backgroundMusic.loop = true;
+
+var braking = new Audio("./assets/braking.wav");
+var ding = new Audio("./assets/ding.mp3");
+var crumbling = new Audio("./assets/crumbling.mp3");
+var correct = new Audio("./assets/correct.mp3");
+var erasing = new Audio("./assets/eraser.mp3");
 /*
 Canvas resizing variables
 */
@@ -177,10 +188,12 @@ function draw(){
     
     ctxScore.strokeStyle = 'red';
     ctxScore.lineWidth = '5';
-    ctxScore.font = "30px Courier New";
+    ctxScore.font = "24px Courier New";
     ctxScore.clearRect(0,0,scoreCanvas.width,scoreCanvas.height);
     ctxScore.strokeRect(0,0, scoreCanvas.width, scoreCanvas.height);
     ctxScore.fillText("Score: " + score, 10,30);
+    ctxScore.font = "30px Comic Sans MS";
+    ctxScore.fillText("Typer Blocks Version 2", scoreCanvas.width/2,30);
     
     
     
@@ -276,6 +289,7 @@ function killBlock(e){
     
     if(started == false){ // Start the game on click
         started = true;
+        backgroundMusic.play();
         defaultSpeed = 0.25;
         blocks[blockIndex][7]=defaultSpeed;
     }
@@ -293,7 +307,8 @@ function killBlock(e){
     
     if(collide([x,y,"Blue",30,30,true]) && bustIts > 0){
         blocks.splice(blocks.indexOf(blocks[blockIndex]),1);
-            // Play the sound
+            // Play the crumbling sound
+            crumbling.play();
             bustIts-=1;
             blockIndex-=1;
             acceleration = 1.5;
@@ -342,7 +357,7 @@ function powerUpUsed(x,y){
         
         // Used the turtle powerup
         isTurtlePower = false;
-        //braking.play();
+        braking.play();
         blocks[blockIndex][7]-=.235;
     
 }
@@ -352,7 +367,8 @@ function powerUpUsed(x,y){
    x + 10 > eraserX &&
    y < checkY + eraser.height &&
    y + 10 > checkY){
-    
+    //Play the sound
+    erasing.play();
     isEraserPower = false;
     eraseAllBlocks();
 }
@@ -433,14 +449,14 @@ function checkForAnswer(answer){
         if(b[5].answer == answer && b[6] == true){
             blocks.splice(blocks.indexOf(b),1);
             blockIndex-=1;
-            //correct.play();
+            correct.play();
             score+=difficulty; // Score porportional to difficulty
             if(score % 5 == 0){
                 //defaultSpeed+=.1;
                 difficulty+=1;
                 if(bustIts < 5){
                     bustIts+=1;
-                    //ding.play();   
+                    ding.play();   
                 }
                 
             }

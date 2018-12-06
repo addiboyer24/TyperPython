@@ -58,6 +58,7 @@ function runit() {
 // document.body.style.cursor = "help"; // If we want to change cursor style
 </script>
 
+<html>
 <body>
     
     <right><pre style="background-color:darkgray;" id="output"></pre></right>
@@ -87,8 +88,7 @@ function runit() {
      -->
 	<script src='js/pythonGameScript.js'></script>
     <script>
-        // Override tab key function
-                  
+        // Override tab key function        
     var textarea = document.getElementById("consoleCanvas");
     textarea.addEventListener('keydown', function(e){
         if(e.keyCode == 9){
