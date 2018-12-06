@@ -11,7 +11,7 @@ var blocks = new Array();
 // Colors that the blocks can be
 var colors = ["Lightblue", "Gold", "Beige", "Pink"];
 var usingWhile = false;
-var isTurtlePower = true, isEraserPower = true;
+var isTurtlePower = true, isEraserPower = true, isChameleonPower = true;
 //usingWhile = true;
 
 /*
@@ -23,7 +23,8 @@ var turtle = new Image();
 turtle.src = "./assets/turtle.png";
 var eraser = new Image();
 eraser.src = "./assets/eraser.png";
-
+var chameleon = new Image();
+chameleon.src = "./assets/eraser.png";
 /*
 Canvas resizing variables
 */
@@ -124,6 +125,7 @@ function draw(){
     ctxMain.strokeRect(0,0, mainCanvas.width, mainCanvas.height);
     ctxMain.fillStyle = "black";
     if(!started){
+        ctxMain.font = "italic 24px Courier New";
         ctxMain.fillText("This is the main Canvas, click to start playing!", 10,mainCanvas.height/10);   
     }
     
@@ -135,7 +137,7 @@ function draw(){
         ctxMain.fillRect(b[0],b[1],b[3],b[4]);
         ctxMain.fillStyle="black"
         ctxMain.font = "italic 16px Courier New";
-        ctxMain.fillText(b[5].question, b[0]+10, b[1]+20);
+        ctxMain.fillText(b[5].question, b[0]+10, b[1]+(b[4]-20));
     });
     
     // Draw the rectangle to hold the powerups
@@ -163,13 +165,15 @@ function draw(){
         offset+=turtle.width+10;
     }
     
-    //Eraser power
+    // Eraser power
     if(isEraserPower){
         ctxMain.fillStyle = "pink";
         ctxMain.fillRect(mainCanvas.width-(eraser.width+offset), 5, eraser.width, eraser.height);
         ctxMain.drawImage(eraser, mainCanvas.width-(eraser.width+offset), 5);
         offset+=eraser.width+10;
     }
+    
+    // Chameleon power
     
     ctxScore.strokeStyle = 'red';
     ctxScore.lineWidth = '5';
@@ -301,11 +305,24 @@ function killBlock(e){
     
 }
 
+function eraseAllBlocks(){
+    blocks = [blocks[blockIndex]]
+    //erasing.play();
+    blockIndex = 0;
+}
+
 function powerUpUsed(x,y){
     
-    var turtleX = mainCanvas.width-turtle.width-10;
-    /*var eraserX = canvas.width-bomb.width-50;
-    var chameleonX = canvas.width-chameleon.width-90;
+    var offset = 10;
+    var turtleX = mainCanvas.width-turtle.width-offset;
+    if(isTurtlePower){
+        offset+=40;
+    }
+    var eraserX = mainCanvas.width-eraser.width-offset;
+    if(isEraserPower){
+        offset+=40;
+    }
+    /*var chameleonX = canvas.width-chameleon.width-90;
     var timeX = canvas.width-time.width-130;
     var billsX = canvas.width-bills.width-170;
     var windX = canvas.width-move.width-210;
@@ -331,16 +348,16 @@ function powerUpUsed(x,y){
 }
     
 // Erase all blocks on the screen
-/*else if(x < eraserX + eraser.width &&
+    else if(x < eraserX + eraser.width &&
    x + 10 > eraserX &&
    y < checkY + eraser.height &&
    y + 10 > checkY){
     
-    eraserPowerAvailable = false;
+    isEraserPower = false;
     eraseAllBlocks();
 }
 // Get a new question
-else if(x < chameleonX + chameleon.width &&
+/*else if(x < chameleonX + chameleon.width &&
    x + 10 > chameleonX &&
    y < checkY + chameleon.height &&
    y + 10 > checkY){
