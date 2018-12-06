@@ -30,6 +30,8 @@ chameleon.src = "./assets/eraser.png";
 //Audio
 var backgroundMusic = new Audio("./assets/gamemusic.mp3");
 backgroundMusic.loop = true;
+var endingMusic = new Audio("./assets/endingmusic.mp3");
+endingMusic.loop = true;
 
 var braking = new Audio("./assets/braking.wav");
 var ding = new Audio("./assets/ding.mp3");
@@ -83,6 +85,12 @@ function update(){
     }
     // Block reached the bottom, spawn new block
     else{
+        /*if(score - difficulty > 0){
+            score-=difficulty;   
+        }
+        else{
+            score = 0;
+        }*/
         
         blocks[blockIndex][2] = "black";
         blocks[blockIndex][6] = false;
@@ -234,8 +242,10 @@ function createQuestion(){
     var stop = Math.round((Math.random()*20)+11);
     
     // Have to use a while loop
-    if(difficulty > 3){
+    if(difficulty == 4){
         usingWhile = true;
+        backgroundMusic.pause();
+        endingMusic.play();
     }
     
     if(difficulty == 2 || difficulty == 5){
@@ -267,7 +277,7 @@ function createQuestion(){
         // You have complted the game.
         if(difficulty == 7){
         window.alert("Congrats you have finished the game with a score of " + score + ". Thanks for playing!");
-                     
+        location.reload();
 }
         // Or, spawn the warmup questions.
         var questionString = start + " to " + stop; 
