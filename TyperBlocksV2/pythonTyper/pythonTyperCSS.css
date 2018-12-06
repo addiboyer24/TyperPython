@@ -51,8 +51,9 @@ button{
     font-size:18px;
     top:26%;
     right:10%;
+    width:8%;
     font-family: Courier New;
-    
+    text-decoration:underline;
   
 }
 canvas {

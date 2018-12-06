@@ -1,16 +1,28 @@
 /*
 Game variables
 */
-var defaultSpeed = .25;
+var defaultSpeed = 0;
 var acceleration = 1.5;
 var blockIndex = -1, bustIts = 3;
 var dropX, difficulty = 1, score=0;
-
+var started = false; 
 // Array to hold all blocks for drawing
 var blocks = new Array();
 // Colors that the blocks can be
 var colors = ["Lightblue", "Gold", "Beige", "Pink"];
+var usingWhile = false;
+var isTurtlePower = true, isEraserPower = true;
+//usingWhile = true;
 
+/*
+Game images and audio
+*/
+var hammer = new Image();
+hammer.src = "./assets/hammer.png";
+var turtle = new Image();
+turtle.src = "./assets/turtle.png";
+var eraser = new Image();
+eraser.src = "./assets/eraser.png";
 
 /*
 Canvas resizing variables
@@ -105,14 +117,16 @@ function resizeCanvas(){
 function draw(){ 
 
 	
+    
     ctxMain.strokeStyle = 'blue';
     ctxMain.lineWidth = '5';
     ctxMain.clearRect(0,0,mainCanvas.width, mainCanvas.height);
     ctxMain.strokeRect(0,0, mainCanvas.width, mainCanvas.height);
-    ctxMain.fillStyle = "blue";
-    ctxMain.fillRect(0,0,mainCanvas.width, mainCanvas.height/20);
     ctxMain.fillStyle = "black";
-    ctxMain.fillText("This is the main Canvas", 10,mainCanvas.height/10);
+    if(!started){
+        ctxMain.fillText("This is the main Canvas, click to start playing!", 10,mainCanvas.height/10);   
+    }
+    
 	// Draw the blocks on the game canvas
     ctxMain.strokeStyle = 'black';
     blocks.forEach(function(b){
@@ -123,7 +137,39 @@ function draw(){
         ctxMain.font = "italic 16px Courier New";
         ctxMain.fillText(b[5].question, b[0]+10, b[1]+20);
     });
+    
+    // Draw the rectangle to hold the powerups
+    ctxMain.fillStyle = "blue";
+    ctxMain.fillRect(0,0,mainCanvas.width, mainCanvas.height/20);
+    
         ctxMain.fillStyle = "black";
+    var offset = 10;
+    // Draw the remaining number of BustIts
+    for(var i = 0; i < bustIts; i++){
+        ctxMain.fillStyle = "silver"
+        ctxMain.fillRect(i * hammer.width+offset+(i*10),5,hammer.width, hammer.height);
+        ctxMain.drawImage(hammer, i * hammer.width+offset+(i*10), 5);
+        
+    }
+    var offset = 10;
+    // Draw the power-ups on the canvas
+    
+    // Turtle power
+    if(isTurtlePower){
+        ctxMain.fillStyle = "green";
+        ctxMain.fillRect(mainCanvas.width-(turtle.width+offset), 5, turtle.width,turtle.height);
+        ctxMain.drawImage(turtle, mainCanvas.width-(turtle.width+offset), 5);
+        
+        offset+=turtle.width+10;
+    }
+    
+    //Eraser power
+    if(isEraserPower){
+        ctxMain.fillStyle = "pink";
+        ctxMain.fillRect(mainCanvas.width-(eraser.width+offset), 5, eraser.width, eraser.height);
+        ctxMain.drawImage(eraser, mainCanvas.width-(eraser.width+offset), 5);
+        offset+=eraser.width+10;
+    }
     
     ctxScore.strokeStyle = 'red';
     ctxScore.lineWidth = '5';
@@ -131,6 +177,8 @@ function draw(){
     ctxScore.clearRect(0,0,scoreCanvas.width,scoreCanvas.height);
     ctxScore.strokeRect(0,0, scoreCanvas.width, scoreCanvas.height);
     ctxScore.fillText("Score: " + score, 10,30);
+    
+    
     
     /*ctxConsole.strokeStyle ='orange';
     ctxConsole.lineWidth ='5';
@@ -145,7 +193,7 @@ function spawnBlock(){
     dropX = Math.round(Math.random()*(mainCanvas.width-mainCanvas.width/7));
     
     // push the block into the blocks array
-    blocks.push([dropX,0,colors[Math.round(Math.random()*3)],mainCanvas.width/7,mainCanvas.height/7,createQuestion(),true, defaultSpeed]);
+    blocks.push([dropX,-(mainCanvas.height/7),colors[Math.round(Math.random()*3)],mainCanvas.width/7,mainCanvas.height/7,createQuestion(),true, defaultSpeed]);
     blockIndex+=1;
     
 }
@@ -168,7 +216,12 @@ function createQuestion(){
     var start = Math.round(Math.random()*10);
     var stop = Math.round((Math.random()*20)+11);
     
-    if(difficulty == 2){
+    // Have to use a while loop
+    if(difficulty > 3){
+        usingWhile = true;
+    }
+    
+    if(difficulty == 2 || difficulty == 5){
         var questionString = start + " to " + stop + " (Sum)"; 
         var answerString = "";
         total = 0;
@@ -178,7 +231,7 @@ function createQuestion(){
         answerString+=total
         answerString+="\n";
     }
-    else if(difficulty == 3){
+    else if(difficulty == 3 || difficulty == 6){
         var divisibleBy = Math.round(Math.random(1)*10);
         var questionString = start + " to " + stop + " %" + divisibleBy + "=0"; 
     var answerString = "";
@@ -192,8 +245,14 @@ function createQuestion(){
     }
         
     }
-    else{
-        
+    else{ 
+         
+        // You have complted the game.
+        if(difficulty == 7){
+        window.alert("Congrats you have finished the game with a score of " + score + ". Thanks for playing!");
+                     
+}
+        // Or, spawn the warmup questions.
         var questionString = start + " to " + stop; 
         var answerString = "";
     
@@ -210,6 +269,14 @@ function createQuestion(){
 
 // Function that removes the block if bustIts are available.
 function killBlock(e){
+    
+    if(started == false){ // Start the game on click
+        started = true;
+        defaultSpeed = 0.25;
+        blocks[blockIndex][7]=defaultSpeed;
+    }
+    
+    
     var rect = mainCanvas.getBoundingClientRect();
     
     var scaleX = mainCanvas.width / rect.width;
@@ -218,7 +285,7 @@ function killBlock(e){
     var x = (e.clientX - rect.left)*scaleX;
     var y = (e.clientY - rect.top)*scaleY;
     
-    console.log("went here");
+    //console.log("went here");
     
     if(collide([x,y,"Blue",30,30,true]) && bustIts > 0){
         blocks.splice(blocks.indexOf(blocks[blockIndex]),1);
@@ -229,11 +296,121 @@ function killBlock(e){
             spawnBlock();
     }
     
+    // Check to see if the user clicked on a powerup!
+    powerUpUsed(x,y);
     
 }
 
+function powerUpUsed(x,y){
+    
+    var turtleX = mainCanvas.width-turtle.width-10;
+    /*var eraserX = canvas.width-bomb.width-50;
+    var chameleonX = canvas.width-chameleon.width-90;
+    var timeX = canvas.width-time.width-130;
+    var billsX = canvas.width-bills.width-170;
+    var windX = canvas.width-move.width-210;
+    var floatX = canvas.width-float.width-250;*/
+    var checkY = 5;
+    
+    
+    
+    // Block to check (x,y.10,10)
+    // falling (turtleX, checkY, turtle.width, turtle.height )
+    
+    // slow down with Turtle
+    if (x < turtleX + turtle.width &&
+   x + 10 > turtleX &&
+   y < checkY + turtle.height &&
+   y + 10 > checkY && isTurtlePower) {
+        
+        // Used the turtle powerup
+        isTurtlePower = false;
+        //braking.play();
+        blocks[blockIndex][7]-=.235;
+    
+}
+    
+// Erase all blocks on the screen
+/*else if(x < eraserX + eraser.width &&
+   x + 10 > eraserX &&
+   y < checkY + eraser.height &&
+   y + 10 > checkY){
+    
+    eraserPowerAvailable = false;
+    eraseAllBlocks();
+}
+// Get a new question
+else if(x < chameleonX + chameleon.width &&
+   x + 10 > chameleonX &&
+   y < checkY + chameleon.height &&
+   y + 10 > checkY){
+    chameleonPowerAvailable = false;
+    change.play();
+    blocks[blockIndex][5] = createQuestion();
+}
+    else if(x < timeX + time.width &&
+   x + 10 > timeX &&
+   y < checkY + time.height &&
+   y + 10 > checkY){
+    
+    blocks[blockIndex][1] = 0;
+    
+    timePowerAvailable = false;
+    winding.play();
+}
+    else if(x < billsX + bills.width &&
+   x + 10 > billsX &&
+   y < checkY + bills.height &&
+   y + 10 > checkY){
+    
+    blocks[blockIndex][2] = "Lightgreen";
+    blocks[blockIndex][5].question = "print('$')";
+    blocks[blockIndex][5].answer = "$\n";
+    chaching.play();
+    blocks[blockIndex][7] = 0;
+    lootPowerAvailable = false;
+    
+}
+    
+    else if(x < windX + move.width &&
+   x + 10 > windX &&
+   y < checkY + move.height &&
+   y + 10 > checkY){
+    
+    var tot = 0; 
+    blocks.forEach(function(b){
+        tot+=b[0] 
+    });
+    tot = tot/blocks.length;
+    blocks[blockIndex][0] = canvas.width-tot;
+    blocks[blockIndex][1]-=50;
+    windy.play();
+    movePowerAvailable = false;
+    
+}
+    else if(x < floatX + float.width &&
+   x + 10 > floatX &&
+   y < checkY + float.height &&
+   y + 10 > checkY){
+    
+    blocks[blockIndex][7] = -.5;
+    inflate.play();
+    floatPowerAvailable = false;
+    isFloating = true;
+    
+}*/
+
+}
+
 function checkForAnswer(answer){
-    var i = 0; 
+    var i = 0;
+    
+    if(usingWhile){
+        if(!checkForWhile()){
+         answer = "";
+        }
+    }
+    
     blocks.forEach(function(b){
         
         if(b[5].answer == answer && b[6] == true){
@@ -278,6 +455,18 @@ function reservedWords(){
     });
     
     consoleCanvas.innerHtml = newHtml; 
+}
+
+function checkForWhile(){
+    var currentCode = consoleCanvas.value;
+    
+    if(currentCode.search("while") == -1){
+        window.alert("Try to destroy the block using a while loop instead!");
+        return false;
+    }
+    else{
+        return true; 
+    }
 }
 
 // Call the update function
