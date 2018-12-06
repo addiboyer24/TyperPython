@@ -9,7 +9,7 @@ var started = false;
 // Array to hold all blocks for drawing
 var blocks = new Array();
 // Colors that the blocks can be
-var colors = ["Lightblue", "Gold", "Beige", "Pink"];
+var colors = ["Lightblue", "Gold", "Lightgreen", "Pink"];
 var usingWhile = false;
 var isTurtlePower = true, isEraserPower = true, isChameleonPower = true;
 //usingWhile = true;
@@ -63,7 +63,7 @@ $(document).ready(function($){
 
 function update(){
     // Block hasn't reached the bottom
-    if(blocks[blockIndex][1]+blocks[blockIndex][4] < mainCanvas.height){
+    if(blocks[blockIndex][1]+blocks[blockIndex][4] < mainCanvas.height-20){
         blocks[blockIndex][1]+=blocks[blockIndex][7];
         
         for(var i = 0; i < blocks.length-1; ++i){
@@ -135,12 +135,15 @@ function resizeCanvas(){
 }
 
 function draw(){ 
-
-	
     
     ctxMain.strokeStyle = 'blue';
     ctxMain.lineWidth = '5';
     ctxMain.clearRect(0,0,mainCanvas.width, mainCanvas.height);
+    
+    // Draw the ground
+    ctxMain.fillStyle = "Lightblue";
+    ctxMain.fillRect( 0,mainCanvas.height-20, mainCanvas.width, 20);
+    
     ctxMain.strokeRect(0,0, mainCanvas.width, mainCanvas.height);
     ctxMain.fillStyle = "black";
     if(!started){
@@ -162,6 +165,7 @@ function draw(){
     // Draw the rectangle to hold the powerups
     ctxMain.fillStyle = "blue";
     ctxMain.fillRect(0,0,mainCanvas.width, mainCanvas.height/20);
+    
     
         ctxMain.fillStyle = "black";
     var offset = 10;
@@ -199,9 +203,16 @@ function draw(){
     ctxScore.font = "24px Courier New";
     ctxScore.clearRect(0,0,scoreCanvas.width,scoreCanvas.height);
     ctxScore.strokeRect(0,0, scoreCanvas.width, scoreCanvas.height);
+    ctxScore.fillStyle = "black";
     ctxScore.fillText("Score: " + score, 10,30);
     ctxScore.font = "30px Comic Sans MS";
-    ctxScore.fillText("Typer Blocks Version 2", scoreCanvas.width/2,30);
+    ctxScore.fillText("Typer Blocks Version 2", scoreCanvas.width/2-20,30);
+    ctxScore.fillStyle = "lightgreen"
+    ctxScore.fillRect(150,0,150, scoreCanvas.height);
+    ctxScore.fillStyle = "pink";
+    ctxScore.fillRect(300, 0,150, scoreCanvas.height);
+    ctxScore.fillStyle = "gold";
+    ctxScore.fillRect(scoreCanvas.width-150, 0, 150, scoreCanvas.height);
     
     
     
