@@ -42,7 +42,7 @@ function runit() {
    Sk.pre = "output";
     
    Sk.configure({output:outf, read:builtinRead}); 
-   (Sk.TurtleGraphics || (Sk.TurtleGraphics = {})).target = 'mycanvas';
+   (Sk.TurtleGraphics || (Sk.TurtleGraphics = {})).target = 'mainCanvasq';
    var myPromise = Sk.misceval.asyncToPromise(function() {
        return Sk.importMainWithBody("<stdin>", false, prog, true);
    });
@@ -51,6 +51,8 @@ function runit() {
         checkForAnswer(mypre.innerHTML);
    },
        function(err) {
+       // Print the error message out in the console!
+       window.alert(err.toString());
        console.log(err.toString());
    });
 }
@@ -59,7 +61,7 @@ function runit() {
 </script>
 
 <html>
-<body>
+<body onload="runit()">
     
     <right><pre style="background-color:darkgray;" id="output"></pre></right>
     <form>
@@ -67,18 +69,20 @@ function runit() {
     </canvas>
     <!--<canvas id='consoleCanvas'>
     </canvas>-->
-   <textarea id='consoleCanvas'>for x in range(0,1):
-        print(x)</textarea>
+   <textarea id='consoleCanvas'>print("Welcome to Typer Blocks")
+print("*"*23)
+print("Write Python Code in the \nconsole above to destroy\nthe blocks before they\nget to the bottom.")
+print("\n")
+print("Click on a block\nto save yourself\nsome time!")
+print("However, you only\nhave 3 of those.")
+print("Explore the power-ups\nin the top right corner.")
+print("\n")
+print("Good luck!")</textarea>
 	<canvas id='mainCanvas'>
 	</canvas>
         <button id="run" style="background-color:lightgreen;"    type="button" onclick="runit()">RUN</button>
 </form>
-    
-
-    
-    
-    
-    
+     
 </body>
 
 	

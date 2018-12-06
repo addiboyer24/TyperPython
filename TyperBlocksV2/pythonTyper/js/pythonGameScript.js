@@ -145,7 +145,7 @@ function draw(){
     ctxMain.fillStyle = "black";
     if(!started){
         ctxMain.font = "italic 24px Courier New";
-        ctxMain.fillText("This is the main Canvas, click to start playing!", 10,mainCanvas.height/10);   
+        ctxMain.fillText("Click anywhere to start playing :)", mainCanvas.width/4,mainCanvas.height/2);   
     }
     
 	// Draw the blocks on the game canvas
