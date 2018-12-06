@@ -299,6 +299,7 @@ function killBlock(e){
     
     if(started == false){ // Start the game on click
         started = true;
+        consoleCanvas.value = "";
         backgroundMusic.play();
         defaultSpeed = 0.25;
         blocks[blockIndex][7]=defaultSpeed;
