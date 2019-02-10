@@ -65,7 +65,7 @@ function update(){
     // Block hasn't reached the bottom
     if(blocks[blockIndex][1]+blocks[blockIndex][4] < mainCanvas.height-20){
         blocks[blockIndex][1]+=blocks[blockIndex][7];
-        
+        //acceleration+=.00010;
         for(var i = 0; i < blocks.length-1; ++i){
             
             // Collides with another block
@@ -207,9 +207,9 @@ function draw(){
     ctxScore.fillText("Score: " + score, 10,30);
     ctxScore.font = "30px Comic Sans MS";
     ctxScore.fillText("Typer Blocks Version 2", scoreCanvas.width/2-20,30);
-    ctxScore.fillStyle = "lightgreen"
+    ctxScore.fillStyle = "pink"
     ctxScore.fillRect(150,0,150, scoreCanvas.height);
-    ctxScore.fillStyle = "pink";
+    ctxScore.fillStyle = "lightgreen";
     ctxScore.fillRect(300, 0,150, scoreCanvas.height);
     ctxScore.fillStyle = "gold";
     ctxScore.fillRect(scoreCanvas.width-150, 0, 150, scoreCanvas.height);
